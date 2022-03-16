@@ -1,0 +1,19 @@
+{
+  "name": "bankart-payment-gateway/bankart-payment-gateway-prestashop",
+  "description": "",
+  "type": "prestashop-plugin",
+  "license": "",
+  "require": {
+    "php": ">=7.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "BankartPaymentGateway\\Prestashop\\PaymentMethod\\": "./payment_method/",
+      "BankartPaymentGateway\\Prestashop\\": "./",
+      "BankartPaymentGateway\\Client\\": "./client/"
+    }
+  },
+  "config": {
+    "vendor-dir": "vendor"
+  }
+}
