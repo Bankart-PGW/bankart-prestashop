@@ -61,5 +61,21 @@
             <div id="error_expired-year-{$id}" class="alert-bankart" style="display: none;">{l s='Card has expired' mod='bankartpaymentgateway'}</div>
         </div>
     </div>
+    
+    
+
+    {if ($instalments > 1)}
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label class="form-control-label">{l s='Instalments' mod='bankartpaymentgateway'}</label>
+                <select class="form-control" name="ccInstalments" id="bankart-payment-gateway-ccInstalments-{$id}">
+                    <option value="" selected>-</option>
+                        {section name=i loop=$instalments start=1}
+                        <option value="{$smarty.section.i.index+1}">{$smarty.section.i.index+1}</option>
+                    {/section}
+                </select>
+            </div>
+        </div>
+    {/if}
 
 </form>

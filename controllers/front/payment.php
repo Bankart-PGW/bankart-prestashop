@@ -1,8 +1,9 @@
 <?php
 /**
  */
-
+use BankartPaymentGateway\Client\Client;
 use BankartPaymentGateway\Client\Transaction\Result;
+
 
 /**
  * Class BankartPaymentGatewayPaymentModuleFrontController
@@ -20,29 +21,50 @@ class BankartPaymentGatewayPaymentModuleFrontController extends ModuleFrontContr
     /**
      * @var Customer
      */
+    
     protected $customer;
+
+    /**
+     * @var Get_option
+     */
+    protected $get_option;
+
 
     protected $paymentTitles = [
         'paymentcard' => 'Payment Card',
-        'mvcisa' => 'Mastercard & VISA',
+        'mvcisa' => 'Mastercard / VISA',
         'diners' => 'Diners',
+        'flik' => 'Flik',   //New
     ];
 
+    static public function getFirstUseAddress($id_customer, $id_address, $active = true)
+    {
+        return Db::getInstance()->getValue('
+            SELECT MIN(`date_add`)
+            FROM `'._DB_PREFIX_.'address`
+            WHERE `id_customer` = '.intval($id_customer).'
+            AND `id_address` = '.intval($id_address).'
+            AND `deleted` = 0'.($active ? ' AND `active` = 1' : '')
+        );
+    }
+
+    public function get_option() {
+        $this->get_option = $get_option;
+    }
+    
     public function postProcess()
     {
         $paymentType = (string)\Tools::getValue('type');
         $prefix = strtoupper($paymentType);
-
+	
         if (!Configuration::get('BANKART_PAYMENT_GATEWAY_' . $prefix . '_ENABLED', null)) {
             die('disabled');
         }
-
         /**
          * cart
          */
         $cart = $this->context->cart;
         $cartId = $cart->id;
-
         if ($cart->id_customer == 0
             || $cart->id_address_delivery == 0
             || $cart->id_address_invoice == 0
@@ -75,6 +97,7 @@ class BankartPaymentGatewayPaymentModuleFrontController extends ModuleFrontContr
             /**
              * order & customer
              */
+
             $orderId = $this->module->currentOrder;
             $this->order = new Order($orderId);
             $this->customer = $this->order->getCustomer();
@@ -138,28 +161,112 @@ class BankartPaymentGatewayPaymentModuleFrontController extends ModuleFrontContr
                 $this->context->language->id,
                 ['id_cart' => $cartId, 'id_module' => $this->module->id, 'key' => $cart->secure_key]
             );
-
-            $transaction->setTransactionId($orderId . '-' . $this->module->currentOrderReference)
+            
+            $transaction->setMerchantTransactionId($orderId . '-' . $this->module->currentOrderReference) //was setTransactionId
                 ->setAmount(number_format(round($cart->getOrderTotal(), 2), 2, '.', ''))
                 ->setCurrency((new Currency($cart->id_currency))->iso_code)
                 ->setCustomer($customer)
-                ->setExtraData($this->extraData3DS())
                 ->setSuccessUrl($successUrl)
                 ->setCancelUrl($this->context->link->getModuleLink($this->module->name, 'return', ['id_order' => $orderId, 'id_cart' => $cartId, 'type' => $paymentType, 'state' => 'cancel'], true))
                 ->setErrorUrl($this->context->link->getModuleLink($this->module->name, 'return', ['id_order' => $orderId, 'id_cart' => $cartId, 'type' => $paymentType, 'state' => 'error'], true))
                 ->setCallbackUrl($this->context->link->getModuleLink($this->module->name, 'callback', ['id_order' => $orderId, 'id_cart' => $cartId, 'type' => $paymentType], true));
+
+            $cart = Context::getContext()->cart;
+            $total = $cart->getOrderTotal(true, Cart::BOTH);
+
+            
+			$amount = \number_format($total, 2, '.', '');
+
+            $instalments = (int)Configuration::get('BANKART_PAYMENT_GATEWAY_' . $prefix . '_INSTALLMENTS', null);
+
+			if (isset($_POST['ccInstalments'])){			
+				if (($_POST['ccInstalments']) != '-' || ($_POST['ccInstalments']) != '') {
+					$instalmentsAmount = (float)Configuration::get('BANKART_PAYMENT_GATEWAY_' . $prefix . '_INSTALMENT_AMOUNT', null);
+					//error_log('#!#!#!#!  transaction started5  !#!#!# $instalmentsAmount:   '. json_encode($instalmentsAmount));
+					$inst_num = ((int)$_POST['ccInstalments']);
+					//error_log('#!#!#!#!  transaction started5  !#!#!# $instalmentsSelected:  '. json_encode($inst_num));
+					$calculateInstalments = floor($amount/$instalmentsAmount);
+					//error_log('#!#!#!#!  transaction started03  !#!#!# $calculateInstalments:  '. json_encode($calculateInstalments));
+					if (!in_array($inst_num, ['', '0', '00', '01', '1'])) {        
+					//  improve error handling 
+						if ($instalments < $inst_num || $calculateInstalments < $inst_num) {
+							die('Bad instalment data!');
+						}
+					$transaction->addExtraData('userField1', (string)$inst_num);
+
+
+					$order = new Order($orderId);
+	
+
+					$order->id_order = (int)$orderId; 
+
+
+					$order->note = ('Number of installments: ' . (string)$inst_num);
+
+
+					//$orderMessage->id_customer = (int)$id_customer;
+
+
+					$order->update();
+					
+					}
+				}
+			}
+            //START
+            $threeDSdata = new \BankartPaymentGateway\Client\Data\ThreeDSecureData();
+                            
+            $context = Context::getContext();
+            $customer = $context->customer;
+
+
+            if ((Configuration::get('BANKART_PAYMENT_GATEWAY_' . $prefix . '_FORCE_CHALLENGE', null)) == '1'){
+                $threeDSdata->setChallengeIndicator('03');
+            } 
+
+            $threeDSdata->setBrowserChallengeWindowSize('05');
+
+            if ($customer) {
+                $accountCreationDate = $customer->date_add;
+                $threeDSdata->setCardholderAccountDate($accountCreationDate ? (new DateTime($accountCreationDate))->format('Y-m-d') : null);
+            }          
+            
+
+            if ($customer && $this->order) {
+                $addressId = $this->order->id_address_delivery;
+            
+                $firstUseDate = BankartPaymentGatewayPaymentModuleFrontController::getFirstUseAddress($customer->id, $addressId);
+            
+                if ($firstUseDate) {
+                    $firstOrderDate = new DateTime($firstUseDate);
+                } else {
+                    $firstOrderDate = new DateTime();
+                }
+            
+                $threeDSdata->setShippingAddressFirstUsage($firstOrderDate->format('Y-m-d'));
+            }
+
+            if ($customer) {
+                $lastUpdate = $customer->date_upd;
+                $threeDSdata->setCardholderAccountLastChange($lastUpdate ? (new DateTime($lastUpdate))->format('Y-m-d') : null);
+            }
+            
+            $transaction->setThreeDSecureData($threeDSdata);
+            $transaction->addExtraData('platform', Client::PLATFORM);
 
             /**
              * token
              */
             if (Configuration::get('BANKART_PAYMENT_GATEWAY_' . $prefix . '_SEAMLESS', null)) {
                 $token = (string)\Tools::getValue('token');
-
+                error_log('#!#!#!#!  _SEAMLESS  !#!#!# $token:  '. json_encode($token));
                 if (empty($token)) {
                     die('Empty token!');
                 }
 
                 $transaction->setTransactionToken($token);
+                error_log('#!#!#!#!   _SEAMLESS  !#!#!# $$transaction :  '. var_dump($transaction, true));
+                $instalments = (string)\Tools::getValue('instalments');
+                error_log('#!#!#!#!  _SEAMLESS  !#!#!# $INSTALLMENTS SELECTED:  '. json_encode($instalments));
             }
 
             switch (Configuration::get('BANKART_PAYMENT_GATEWAY_' . $prefix . '_TRANSACTION_TYPE', null)) {
@@ -170,10 +277,10 @@ class BankartPaymentGatewayPaymentModuleFrontController extends ModuleFrontContr
                 case 'DEBIT':
                     $paymentResult = $client->debit($transaction);
                     break;
-            }
-
+            }       
+          
         } catch (\Throwable $e) {
-            PrestaShopLogger::addLog('Bankart: payment request - ' + $e->getMessage(), 1, null, 'Order', (int) $this->order->id, true);
+            PrestaShopLogger::addLog('Bankart: payment request - ' . $e->getMessage(), 1, null, 'Order', (int) $this->order->id, true);
             $this->processFailure($this->order);
         }
 
@@ -226,7 +333,7 @@ class BankartPaymentGatewayPaymentModuleFrontController extends ModuleFrontContr
      * @throws Exception
      * @return array
      */
-    private function extraData3DS()
+    private function extraData3DS() //obsolete
     {
         $extraData = [
             /**
@@ -245,7 +352,7 @@ class BankartPaymentGatewayPaymentModuleFrontController extends ModuleFrontContr
             /**
              * Additional 3ds 2.0 data
              */
-            '3ds:addCardAttemptsDay' => $this->addCardAttemptsDay(),
+            '3ds:addCardAttemptsDay' => $this->addCardAttemptsDay(), 
             '3ds:authenticationIndicator' => $this->authenticationIndicator(),
             '3ds:billingAddressLine3' => $this->billingAddressLine3(),
             '3ds:billingShippingAddressMatch' => $this->billingShippingAddressMatch(),

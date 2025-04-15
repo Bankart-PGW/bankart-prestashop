@@ -28,7 +28,7 @@
 	<ul class="alert alert-info">
 			<li>{l s='This action should be used to redirect your customer to the website of your payment processor' mod='bankartpaymentgateway'}.</li>
 	</ul>
-	
+
 	<div class="alert alert-warning">
 		{l s='You can redirect your customer with an error message' mod='bankartpaymentgateway'}:
 		<a href="{$link->getModuleLink('bankartpaymentgateway', 'redirect', ['action' => 'error'], true)|escape:'htmlall':'UTF-8'}" title="{l s='Look at the error' mod='bankartpaymentgateway'}">
