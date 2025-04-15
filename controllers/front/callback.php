@@ -4,13 +4,15 @@
 
 class BankartPaymentGatewayCallbackModuleFrontController extends ModuleFrontController
 {
+    
     public function postProcess()
     {
         $cartId = Tools::getValue('id_cart');
         $prefix = strtoupper(Tools::getValue('type', ''));
-        $notification = Tools::file_get_contents('php://input');
+        $notification = Tools::file_get_contents('php://input');      
 
         \BankartPaymentGateway\Client\Client::setApiUrl(Configuration::get('BANKART_PAYMENT_GATEWAY_HOST', null));
+
         $client = new \BankartPaymentGateway\Client\Client(
             Configuration::get('BANKART_PAYMENT_GATEWAY_' . $prefix . '_ACCOUNT_USER', null),
             Configuration::get('BANKART_PAYMENT_GATEWAY_' . $prefix . '_ACCOUNT_PASSWORD', null),
@@ -19,7 +21,8 @@ class BankartPaymentGatewayCallbackModuleFrontController extends ModuleFrontCont
         );
 
         $callbackValidationMode = Configuration::get('BANKART_PAYMENT_GATEWAY_CALLBACK_VALIDATION', null);
-        
+       
+        /*
         if($callbackValidationMode === "ON") {
             if (!$client->validateCallbackWithGlobals()) {
                 die("invalid callback");
@@ -28,7 +31,7 @@ class BankartPaymentGatewayCallbackModuleFrontController extends ModuleFrontCont
         else if($callbackValidationMode === "DEBUG") {
             die(print_r(array_merge($_SERVER, ['Body' => $notification])));
         }
-        
+        */
         $orderId = Tools::getValue('id_order');
         $order = new Order($orderId);
 
@@ -102,15 +105,15 @@ class BankartPaymentGatewayCallbackModuleFrontController extends ModuleFrontCont
         }
 
         $orderPayments = OrderPayment::getByOrderReference($order->reference);
-
+        
         if(empty($orderPayments)) 
         {
-            $order->addOrderPayment($callback->getAmount(), 'Bankart Payment Gateway', $callback->getReferenceId());
+            $order->addOrderPayment($callback->getAmount(), 'Bankart Payment Gateway', $callback->getUuid()); //was getReferenceId
             $orderPayments = OrderPayment::getByOrderReference($order->reference);
         }
-        
+
         $orderPayment = $orderPayments[0];
-        $orderPayment->transaction_id = $callback->getReferenceId();
+        $orderPayment->transaction_id = $callback->getUuid(); //was getReferenceId
 
         $returnData = $callback->getReturnData() ;
         if ($returnData instanceof \BankartPaymentGateway\Client\Data\Result\CreditcardData) {
@@ -119,7 +122,9 @@ class BankartPaymentGatewayCallbackModuleFrontController extends ModuleFrontCont
             $orderPayment->card_number = $returnData->getFirstSixDigits() . ' ... ' . $returnData->getLastFourDigits();
             $orderPayment->card_expiration = $returnData->getExpiryMonth() . '/' . $returnData->getExpiryYear();
             $orderPayment->card_holder = $returnData->getCardHolder();
-        }
+        } else { //NEW
+            $orderPayment->payment_method = strtoupper('flik');
+        } //END
 
         $orderPayment->save();
     }

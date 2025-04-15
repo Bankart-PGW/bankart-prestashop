@@ -332,15 +332,15 @@ class Generator {
             if ($transaction->getMarkAsPreferred()) {
                 $this->_appendTextNode($profileNode, 'markAsPreferred', 'true');
             }
-
+            
             $parentNode->appendChild($profileNode);
-
+            
         } elseif ($transaction->getCustomerProfileIdentification()) {
             $this->_appendTextNode($profileNode, 'customerIdentification', $transaction->getCustomerProfileIdentification());
             if ($transaction->getMarkAsPreferred()) {
                 $this->_appendTextNode($profileNode, 'markAsPreferred', 'true');
             }
-
+            
             $parentNode->appendChild($profileNode);
         }
 
@@ -385,7 +385,7 @@ class Generator {
     protected function appendAmountableNodes(\DOMNode $parentNode, AmountableInterface $transaction) {
         $this->verifyAmountType($transaction->getAmount(), 'amount');
         $this->verifyCurrencyType($transaction->getCurrency(), 'currency');
-
+		
         $this->_appendTextNode($parentNode, 'amount', number_format($transaction->getAmount(), 2, '.', ''));
         $this->_appendTextNode($parentNode, 'currency', $transaction->getCurrency());
     }
@@ -774,7 +774,7 @@ class Generator {
             throw new TypeException('Value of '.$elementName.' must be a Date/Time object in future');
         }
     }
-
+    
     /**
      * @param \DOMNode $parentNode
      * @param string $nodeName

@@ -1,9 +1,5 @@
 # Bankart Payment Gateway PrestaShop Extension
 
-## Preinstallation
-1. Download .zip from GitHub repository.
-1. Rename folder `bankart-prestashop-master` inside .zip file to `bankartpaymentgateway` 
-
 ## Installation
 
 1. Go to `Modules` > `Module Manager` in your shop's admin area.
