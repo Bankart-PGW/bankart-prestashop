@@ -4,8 +4,8 @@ namespace BankartPaymentGateway\Client\Schedule;
 
 /**
  * Class ScheduleError
- * @deprecated not used anymore
- * @package BankartPaymentGateway\Client\ScheduleResultData
+ *
+ * @package BankartPaymentGateway\Client\Schedule
  */
 class ScheduleError {
 
@@ -30,7 +30,7 @@ class ScheduleError {
     /** schedule request failed */
     const SCHEDULE_REQUEST_FAILED = 7002;
 
-    /** ScheduleResultData not enabled for the connector */
+    /** Schedule not enabled for the connector */
     const SCHEDULE_NOT_ENABLED = 7003;
 
     /** scheduleAction is not valid */
@@ -79,6 +79,8 @@ class ScheduleError {
     /**
      * @param string $message
      * @param int|null $code
+     * @param string|null $adapterMessage
+     * @param string|null $adapterCode
      */
     public function __construct($message, $code = null) {
         $this->message = $message;

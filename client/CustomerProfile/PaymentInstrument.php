@@ -2,7 +2,7 @@
 
 namespace BankartPaymentGateway\Client\CustomerProfile;
 
-use BankartPaymentGateway\Client\Data\PaymentData\PaymentData;
+use BankartPaymentGateway\Client\CustomerProfile\PaymentData\PaymentData;
 use BankartPaymentGateway\Client\Json\DataObject;
 
 /**
@@ -24,13 +24,11 @@ class PaymentInstrument extends DataObject {
 
 
     /**
-     * @param \DateTime|string $createdAt
-     *
+     * @param \DateTime $createdAt
      * @return PaymentInstrument
-     * @throws \Exception
      */
     public function setCreatedAt($createdAt) {
-        if (!empty($createdAt) && is_string($createdAt)) {
+        if (is_string($createdAt) && $createdAt) {
             $createdAt = new \DateTime($createdAt);
         }
         $this->createdAt = $createdAt;

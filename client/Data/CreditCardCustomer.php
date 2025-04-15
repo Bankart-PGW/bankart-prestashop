@@ -5,17 +5,14 @@ namespace BankartPaymentGateway\Client\Data;
 /**
  * Specialized class to represent a customer with credit card data.
  *
- * @deprecated
  * @package BankartPaymentGateway\Client\Data
  */
 class CreditCardCustomer extends Customer {
 
     /**
-     * @deprecated use $firstSix, $lastFour
      * @var string
      */
     protected $number;
-
     /**
      * @var int
      */
@@ -25,22 +22,18 @@ class CreditCardCustomer extends Customer {
      */
     protected $expiryYear;
     /**
-     * @deprecated
      * @var int
      */
     protected $startMonth;
     /**
-     * @deprecated
      * @var int
      */
     protected $startYear;
     /**
-     * @deprecated
      * @var string
      */
     protected $cvv;
     /**
-     * @deprecated
      * @var string
      */
     protected $issueNumber;
@@ -50,27 +43,6 @@ class CreditCardCustomer extends Customer {
     protected $type;
 
     /**
-     * @var string
-     */
-    protected $brand;
-
-    /**
-     * @var string
-     */
-    protected $cardHolder;
-
-    /**
-     * @var string
-     */
-    protected $firstSixDigits;
-
-    /**
-     * @var string
-     */
-    protected $lastFourDigits;
-
-    /**
-     * @deprecated
      * @param $number
      *
      * @return $this
@@ -81,7 +53,6 @@ class CreditCardCustomer extends Customer {
     }
 
     /**
-     * @deprecated
      * @return string
      */
     public function getNumber() {
@@ -123,7 +94,6 @@ class CreditCardCustomer extends Customer {
     }
 
     /**
-     * @deprecated
      * @param int $startMonth
      *
      * @return $this
@@ -134,7 +104,6 @@ class CreditCardCustomer extends Customer {
     }
 
     /**
-     * @deprecated
      * @return int
      */
     public function getStartMonth() {
@@ -142,7 +111,6 @@ class CreditCardCustomer extends Customer {
     }
 
     /**
-     * @deprecated
      * @param int $startYear
      *
      * @return $this
@@ -153,7 +121,6 @@ class CreditCardCustomer extends Customer {
     }
 
     /**
-     * @deprecated
      * @return int
      */
     public function getStartYear() {
@@ -161,7 +128,6 @@ class CreditCardCustomer extends Customer {
     }
 
     /**
-     * @deprecated
      * @param int $cvv
      *
      * @return $this
@@ -172,7 +138,6 @@ class CreditCardCustomer extends Customer {
     }
 
     /**
-     * @deprecated
      * @return string
      */
     public function getCvv() {
@@ -180,7 +145,6 @@ class CreditCardCustomer extends Customer {
     }
 
     /**
-     * @deprecated
      * @param string $issueNumber
      *
      * @return $this
@@ -191,7 +155,6 @@ class CreditCardCustomer extends Customer {
     }
 
     /**
-     * @deprecated
      * @return string
      */
     public function getIssueNumber() {
@@ -199,7 +162,6 @@ class CreditCardCustomer extends Customer {
     }
 
     /**
-     * @deprecated
      * @param string $type
      *
      * @return $this
@@ -210,87 +172,10 @@ class CreditCardCustomer extends Customer {
     }
 
     /**
-     * @deprecated
      * @return string
      */
     public function getType() {
         return $this->type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getBrand()
-    {
-        return $this->brand;
-    }
-
-    /**
-     * @param string $brand
-     *
-     * @return CreditCardCustomer
-     */
-    public function setBrand($brand)
-    {
-        $this->brand = $brand;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCardHolder()
-    {
-        return $this->cardHolder;
-    }
-
-    /**
-     * @param string $cardHolder
-     *
-     * @return CreditCardCustomer
-     */
-    public function setCardHolder($cardHolder)
-    {
-        $this->cardHolder = $cardHolder;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFirstSixDigits()
-    {
-        return $this->firstSixDigits;
-    }
-
-    /**
-     * @param string $firstSixDigits
-     *
-     * @return CreditCardCustomer
-     */
-    public function setFirstSixDigits($firstSixDigits)
-    {
-        $this->firstSixDigits = $firstSixDigits;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLastFourDigits()
-    {
-        return $this->lastFourDigits;
-    }
-
-    /**
-     * @param string $lastFourDigits
-     *
-     * @return CreditCardCustomer
-     */
-    public function setLastFourDigits($lastFourDigits)
-    {
-        $this->lastFourDigits = $lastFourDigits;
-        return $this;
     }
 
 }

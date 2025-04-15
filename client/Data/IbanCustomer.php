@@ -8,7 +8,6 @@ use BankartPaymentGateway\Client\Exception\InvalidValueException;
 /**
  * Class IbanCustomer
  *
- * @deprecated see BankartPaymentGateway\Client\Data\PaymentData\IbanData
  * @package BankartPaymentGateway\Client\Data
  */
 class IbanCustomer extends Customer {
@@ -76,7 +75,6 @@ class IbanCustomer extends Customer {
 
     /**
      * @param string $mandateId
-     * @return IbanCustomer
      */
     public function setMandateId($mandateId) {
         $this->mandateId = $mandateId;
@@ -91,9 +89,8 @@ class IbanCustomer extends Customer {
     }
 
     /**
-     * @param \DateTime|string $mandateDate
+     * @param \DateTime $mandateDate
      *
-     * @return IbanCustomer
      * @throws InvalidValueException
      */
     public function setMandateDate($mandateDate) {

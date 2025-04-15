@@ -3,7 +3,6 @@
 namespace BankartPaymentGateway\Client\Transaction\Base;
 
 use BankartPaymentGateway\Client\Schedule\ScheduleData;
-use BankartPaymentGateway\Client\Schedule\ScheduleWithTransaction;
 
 /**
  * Trait ScheduleTrait
@@ -13,27 +12,23 @@ use BankartPaymentGateway\Client\Schedule\ScheduleWithTransaction;
 trait ScheduleTrait {
 
     /**
-     * @var ScheduleWithTransaction
+     * @var ScheduleData
      */
     protected $schedule;
 
     /**
-     * ScheduleResultData for backward compatibility
-     *
-     * @return ScheduleData|ScheduleWithTransaction
+     * @return ScheduleData|null
      */
     public function getSchedule() {
         return $this->schedule;
     }
 
     /**
-     * ScheduleResultData for backward compatibility
-     *
-     * @param ScheduleData|ScheduleWithTransaction $schedule
+     * @param ScheduleData|null $schedule
      *
      * @return $this
      */
-    public function setSchedule($schedule = null) {
+    public function setSchedule(ScheduleData $schedule = null) {
         $this->schedule = $schedule;
 
         return $this;

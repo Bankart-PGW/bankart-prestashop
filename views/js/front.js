@@ -39,8 +39,9 @@ var initBankartPaymentGatewaySeamless = function (seamlessForm) {
   var $seamlessCvvInput = $('#bankart-payment-gateway-ccCvv-' + formId, $seamlessForm);
   var $seamlessExpiryMonthInput = $('#bankart-payment-gateway-ccExpiryMonth-' + formId, $seamlessForm);
   var $seamlessExpiryYearInput = $('#bankart-payment-gateway-ccExpiryYear-' + formId, $seamlessForm);
+
   var $paymentButton = $('#payment-confirmation button');
-  
+
   /**
    * fixed seamless input heights
    */
@@ -81,7 +82,7 @@ var initBankartPaymentGatewaySeamless = function (seamlessForm) {
   $seamlessForm.submit(function (e) {
     e.preventDefault();
     $('.alert-bankart').hide();
-
+    
     payment.tokenize(
       {
         card_holder: $seamlessCardHolderInput.val(),

@@ -5,66 +5,54 @@ namespace BankartPaymentGateway\Client\Transaction;
 use BankartPaymentGateway\Client\Transaction\Base\AbstractTransactionWithReference;
 use BankartPaymentGateway\Client\Transaction\Base\AmountableInterface;
 use BankartPaymentGateway\Client\Transaction\Base\AmountableTrait;
-use BankartPaymentGateway\Client\Transaction\Base\CustomerInterface;
-use BankartPaymentGateway\Client\Transaction\Base\CustomerTrait;
 use BankartPaymentGateway\Client\Transaction\Base\ItemsInterface;
 use BankartPaymentGateway\Client\Transaction\Base\ItemsTrait;
-use BankartPaymentGateway\Client\Transaction\Base\OffsiteInterface;
-use BankartPaymentGateway\Client\Transaction\Base\OffsiteTrait;
 
 /**
  * Payout: Payout a certain amount of money to the customer. (Debits the merchant's account, Credits the customer's account)
  *
  * @package BankartPaymentGateway\Client\Transaction
  */
-class Payout extends AbstractTransactionWithReference
-             implements AmountableInterface,
-                        CustomerInterface,
-                        ItemsInterface,
-                        OffsiteInterface
-{
-
-    use AmountableTrait;
-    use CustomerTrait;
+class Payout extends AbstractTransactionWithReference implements AmountableInterface, ItemsInterface {
     use ItemsTrait;
-    use OffsiteTrait;
+    use AmountableTrait;
 
-    /** @var string */
-    protected $transactionToken;
+    /**
+     * @var string
+     */
+    protected $description;
 
-    /** @var string */
-    protected $language;
+    /**
+     * @var string
+     */
+    protected $callbackUrl;
 
     /**
      * @return string
      */
-    public function getTransactionToken()
-    {
-        return $this->transactionToken;
+    public function getDescription() {
+        return $this->description;
     }
 
     /**
-     * @param string $transactionToken
+     * @param string $description
      */
-    public function setTransactionToken($transactionToken)
-    {
-        $this->transactionToken = $transactionToken;
+    public function setDescription($description) {
+        $this->description = $description;
     }
 
     /**
      * @return string
      */
-    public function getLanguage()
-    {
-        return $this->language;
+    public function getCallbackUrl() {
+        return $this->callbackUrl;
     }
 
     /**
-     * @param string $language
+     * @param string $callbackUrl
      */
-    public function setLanguage($language)
-    {
-        $this->language = $language;
+    public function setCallbackUrl($callbackUrl) {
+        $this->callbackUrl = $callbackUrl;
     }
 
 }

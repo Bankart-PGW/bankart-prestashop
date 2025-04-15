@@ -11,11 +11,6 @@ namespace BankartPaymentGateway\Client\Http;
 class CurlExec {
 
     /**
-     * @var resource
-     */
-    private $handle;
-
-    /**
      * @var string
      */
     private $headerString = "";

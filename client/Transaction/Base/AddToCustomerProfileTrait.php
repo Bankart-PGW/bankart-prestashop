@@ -2,48 +2,33 @@
 
 namespace BankartPaymentGateway\Client\Transaction\Base;
 
-use BankartPaymentGateway\Client\Data\CustomerProfileData;
-
 /**
  * Trait AddToCustomerProfileTrait
- *
  * @package BankartPaymentGateway\Client\Transaction\Base
  */
 trait AddToCustomerProfileTrait {
 
     /**
-     * @deprecated not in use anymore
-     *
      * @var bool
      */
     protected $addToCustomerProfile = false;
 
     /**
-     * @var CustomerProfileData
+     * @var string
      */
-    protected $customerProfileData;
+    protected $customerProfileGuid;
 
     /**
-     * @return CustomerProfileData
+     * @var string
      */
-    public function getCustomerProfileData() {
-        return $this->customerProfileData;
-    }
+    protected $customerProfileIdentification;
 
     /**
-     * @param CustomerProfileData|null $customerProfileData
-     *
-     * @return $this
+     * @var string
      */
-    public function setCustomerProfileData(CustomerProfileData $customerProfileData = null) {
-        $this->customerProfileData = $customerProfileData;
-        return $this;
-    }
+    protected $markAsPreferred;
 
     /**
-     * @deprecated not in use anymore
-     *             sending customerProfileData will automatically add it to the customerProfile
-     *
      * @return bool
      */
     public function getAddToCustomerProfile() {
@@ -51,11 +36,8 @@ trait AddToCustomerProfileTrait {
     }
 
     /**
-     * @deprecated not in use anymore
-     *             sending customerProfileData will automatically add it to the customerProfile
-     *
      * @param bool $addToCustomerProfile
-     * @return $this
+     * @return AddToCustomerProfileTrait
      */
     public function setAddToCustomerProfile($addToCustomerProfile) {
         $this->addToCustomerProfile = $addToCustomerProfile;
@@ -63,74 +45,51 @@ trait AddToCustomerProfileTrait {
     }
 
     /**
-     * @deprecated use CustomerProfileData instead
-     *
      * @return string
      */
-    public function getCustomerProfileGuid(){
-        return $this->customerProfileData ? $this->customerProfileData->getProfileGuid() : null;
+    public function getCustomerProfileGuid() {
+        return $this->customerProfileGuid;
     }
 
     /**
-     * backwards compatibility
-     * @deprecated use CustomerProfileData instead
-     *
-     * @param string $profileGuid
-     * @return $this
+     * @param string $customerProfileGuid
+     * @return AddToCustomerProfileTrait
      */
-    public function setCustomerProfileGuid($profileGuid){
-        if ($profileGuid && !$this->customerProfileData) {
-            $this->customerProfileData = new CustomerProfileData();
-            $this->customerProfileData->setProfileGuid($profileGuid);
-        }
+    public function setCustomerProfileGuid($customerProfileGuid) {
+        $this->customerProfileGuid = $customerProfileGuid;
         return $this;
     }
 
     /**
-     * @deprecated use CustomerProfileData instead
-     *
      * @return string
      */
     public function getCustomerProfileIdentification() {
-        return $this->customerProfileData ? $this->customerProfileData->getCustomerIdentification() : null;
+        return $this->customerProfileIdentification;
     }
 
     /**
-     * @deprecated use CustomerProfileData instead
-     *
-     * @param string $identification
-     *
-     * @return $this
+     * @param string $customerProfileIdentification
+     * @return AddToCustomerProfileTrait
      */
-    public function setCustomerProfileIdentification($identification) {
-        if ($identification && !$this->customerProfileData) {
-            $this->customerProfileData = new CustomerProfileData();
-            $this->customerProfileData->setCustomerIdentification($identification);
-        }
+    public function setCustomerProfileIdentification($customerProfileIdentification) {
+        $this->customerProfileIdentification = $customerProfileIdentification;
         return $this;
     }
 
     /**
-     * @deprecated use CustomerProfileData instead
-     *
-     * @return bool
+     * @return string
      */
     public function getMarkAsPreferred() {
-        return $this->customerProfileData ? $this->customerProfileData->getMarkAsPreferred() : false;
+        return $this->markAsPreferred;
     }
 
     /**
-     * @deprecated use CustomerProfileData instead
-     *
-     * @param bool $markAsPreferred
-     *
-     * @return $this
+     * @param string $markAsPrefrred
+     * @return AddToCustomerProfileTrait
      */
     public function setMarkAsPreferred($markAsPreferred) {
-        if ($markAsPreferred !== null && !$this->customerProfileData) {
-            $this->customerProfileData = new CustomerProfileData();
-            $this->customerProfileData->setMarkAsPreferred($markAsPreferred);
-        }
+        $this->markAsPreferred = $markAsPreferred;
         return $this;
     }
+
 }

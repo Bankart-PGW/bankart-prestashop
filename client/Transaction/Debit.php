@@ -7,39 +7,24 @@ use BankartPaymentGateway\Client\Transaction\Base\AddToCustomerProfileInterface;
 use BankartPaymentGateway\Client\Transaction\Base\AddToCustomerProfileTrait;
 use BankartPaymentGateway\Client\Transaction\Base\AmountableInterface;
 use BankartPaymentGateway\Client\Transaction\Base\AmountableTrait;
-use BankartPaymentGateway\Client\Transaction\Base\CustomerInterface;
-use BankartPaymentGateway\Client\Transaction\Base\CustomerTrait;
 use BankartPaymentGateway\Client\Transaction\Base\ItemsInterface;
 use BankartPaymentGateway\Client\Transaction\Base\ItemsTrait;
 use BankartPaymentGateway\Client\Transaction\Base\OffsiteInterface;
 use BankartPaymentGateway\Client\Transaction\Base\OffsiteTrait;
 use BankartPaymentGateway\Client\Transaction\Base\ScheduleInterface;
 use BankartPaymentGateway\Client\Transaction\Base\ScheduleTrait;
-use BankartPaymentGateway\Client\Transaction\Base\ThreeDSecureInterface;
-use BankartPaymentGateway\Client\Transaction\Base\ThreeDSecureTrait;
 
 /**
  * Debit: Charge the customer for a certain amount of money. This could be once, but also recurring.
  *
  * @package BankartPaymentGateway\Client\Transaction
  */
-class Debit extends AbstractTransactionWithReference
-            implements AddToCustomerProfileInterface,
-                       AmountableInterface,
-                       CustomerInterface,
-                       ItemsInterface,
-                       OffsiteInterface,
-                       ScheduleInterface,
-                       ThreeDSecureInterface
-{
-
-    use AddToCustomerProfileTrait;
-    use AmountableTrait;
-    use CustomerTrait;
-    use ItemsTrait;
+class Debit extends AbstractTransactionWithReference implements AmountableInterface, OffsiteInterface, ItemsInterface, ScheduleInterface, AddToCustomerProfileInterface {
     use OffsiteTrait;
+    use AmountableTrait;
+    use ItemsTrait;
     use ScheduleTrait;
-    use ThreeDSecureTrait;
+    use AddToCustomerProfileTrait;
 
     const TRANSACTION_INDICATOR_SINGLE = 'SINGLE';
     const TRANSACTION_INDICATOR_INITIAL = 'INITIAL';
@@ -47,33 +32,15 @@ class Debit extends AbstractTransactionWithReference
     const TRANSACTION_INDICATOR_CARDONFILE = 'CARDONFILE';
     const TRANSACTION_INDICATOR_CARDONFILE_MERCHANT = 'CARDONFILE_MERCHANT';
 
-    /** @var string */
-    protected $transactionToken;
-
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $withRegister = false;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $transactionIndicator;
-
-    /** @var string */
-    protected $language;
-
-    /**
-     * @return string
-     */
-    public function getTransactionToken()
-    {
-        return $this->transactionToken;
-    }
-
-    /**
-     * @param string $transactionToken
-     */
-    public function setTransactionToken($transactionToken)
-    {
-        $this->transactionToken = $transactionToken;
-    }
 
     /**
      * @return boolean
@@ -103,27 +70,10 @@ class Debit extends AbstractTransactionWithReference
 
     /**
      * @param string $transactionIndicator
-     *
-     * @return $this
      */
     public function setTransactionIndicator($transactionIndicator) {
         $this->transactionIndicator = $transactionIndicator;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLanguage()
-    {
-        return $this->language;
-    }
-
-    /**
-     * @param string $language
-     */
-    public function setLanguage($language)
-    {
-        $this->language = $language;
-    }
 }

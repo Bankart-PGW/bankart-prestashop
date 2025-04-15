@@ -19,44 +19,15 @@ class Refund extends AbstractTransactionWithReference implements AmountableInter
     use AmountableTrait;
     use ItemsTrait;
 
-    /** @var string */
-    protected $callbackUrl;
-    
-    /** @var string */
-    protected $transactionToken;
-
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $description;
 
     /**
-     * @return string
+     * @var string
      */
-    public function getCallbackUrl() {
-        return $this->callbackUrl;
-    }
-
-    /**
-     * @param string $callbackUrl
-     */
-    public function setCallbackUrl($callbackUrl) {
-        $this->callbackUrl = $callbackUrl;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTransactionToken()
-    {
-        return $this->transactionToken;
-    }
-
-    /**
-     * @param string $transactionToken
-     */
-    public function setTransactionToken($transactionToken)
-    {
-        $this->transactionToken = $transactionToken;
-    }
+    protected $callbackUrl;
 
     /**
      * @return string
@@ -72,4 +43,17 @@ class Refund extends AbstractTransactionWithReference implements AmountableInter
         $this->description = $description;
     }
 
+    /**
+     * @return string
+     */
+    public function getCallbackUrl() {
+        return $this->callbackUrl;
+    }
+
+    /**
+     * @param string $callbackUrl
+     */
+    public function setCallbackUrl($callbackUrl) {
+        $this->callbackUrl = $callbackUrl;
+    }
 }

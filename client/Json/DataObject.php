@@ -2,12 +2,6 @@
 
 namespace BankartPaymentGateway\Client\Json;
 
-use BankartPaymentGateway\Client\CustomerProfile\CustomerData;
-use BankartPaymentGateway\Client\CustomerProfile\PaymentInstrument;
-use BankartPaymentGateway\Client\Data\PaymentData\IbanData;
-use BankartPaymentGateway\Client\Data\PaymentData\WalletData;
-use BankartPaymentGateway\Client\Data\ThreeDSecureData;
-
 /**
  * Class DataObject
  *
@@ -21,11 +15,11 @@ class DataObject implements \ArrayAccess, \JsonSerializable {
     protected $_data = array();
 
     protected static $_typeMap = array(
-        'customerData' => CustomerData::class,
-        'paymentInstrument' => PaymentInstrument::class,
-        'paymentData.iban' => IbanData::class,
-        'paymentData.wallet' => WalletData::class,
-        'threeDSecureData' => ThreeDSecureData::class,
+        'customerData' => \BankartPaymentGateway\Client\CustomerProfile\CustomerData::class,
+        'paymentInstrument' => \BankartPaymentGateway\Client\CustomerProfile\PaymentInstrument::class,
+        'paymentData.card' => \BankartPaymentGateway\Client\CustomerProfile\PaymentData\CardData::class,
+        'paymentData.iban' => \BankartPaymentGateway\Client\CustomerProfile\PaymentData\IbanData::class,
+        'paymentData.wallet' => \BankartPaymentGateway\Client\CustomerProfile\PaymentData\WalletData::class,
     );
 
     /**
@@ -72,8 +66,7 @@ class DataObject implements \ArrayAccess, \JsonSerializable {
      * @return string
      */
     public function __toString() {
-        /** @noinspection MagicMethodsValidityInspection */
-        return json_encode($this->_data) ?: '';
+        return json_encode($this->_data);
     }
 
 
@@ -81,7 +74,7 @@ class DataObject implements \ArrayAccess, \JsonSerializable {
      * @param string $offset
      * @return bool
      */
-    public function offsetExists($offset): bool {        
+    public function offsetExists($offset) {
         return array_key_exists($offset, $this->_data);
     }
 
@@ -89,7 +82,7 @@ class DataObject implements \ArrayAccess, \JsonSerializable {
      * @param string $offset
      * @return mixed|null
      */
-    public function offsetGet($offset): mixed {
+    public function offsetGet($offset) {
         return $this->__get($offset);
     }
 
@@ -97,33 +90,33 @@ class DataObject implements \ArrayAccess, \JsonSerializable {
      * @param string $offset
      * @param mixed $value
      */
-    public function offsetSet($offset, $value): void {
-        $this->__set($offset, $value);
+    public function offsetSet($offset, $value) {
+        return $this->__set($offset, $value);
     }
 
     /**
      * @param string $offset
      */
-    public function offsetUnset($offset): void {
+    public function offsetUnset($offset) {
         $this->__unset($offset);
     }
 
     /**
      * @return array
      */
-    public function jsonSerialize(): mixed {
+    public function jsonSerialize() {
         return $this->_data;
     }
 
     /**
      * @return array
      */
-    public function toArray(): array {
+    public function toArray() {
         return $this->_data;
     }
 
     /**
-     * @param array $data
+     * @param string $data
      */
     public function _populateFromResponse($data) {
         foreach ($data as $k=>$v) {
@@ -167,7 +160,6 @@ class DataObject implements \ArrayAccess, \JsonSerializable {
                 $this->$k = $v;
             }
         }
-
     }
 
 

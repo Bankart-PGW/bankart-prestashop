@@ -2,8 +2,8 @@
 
 namespace BankartPaymentGateway\Client\Xml;
 
-use BankartPaymentGateway\Client\Data\ChargebackData;
-use BankartPaymentGateway\Client\Data\ChargebackReversalData;
+use BankartPaymentGateway\Client\Callback\ChargebackData;
+use BankartPaymentGateway\Client\Callback\ChargebackReversalData;
 use BankartPaymentGateway\Client\Data\Customer;
 use BankartPaymentGateway\Client\Data\Result\CreditcardData;
 use BankartPaymentGateway\Client\Data\Result\IbanData;
@@ -176,9 +176,6 @@ class Parser {
                     break;
                 case 'scheduleStatus':
                     $result->setScheduleStatus($child->nodeValue);
-                    break;
-                case 'scheduleMerchantMetaData':
-                    $result->setScheduleMerchantMetaData($child->nodeValue);
                     break;
                 default:
                     break;
@@ -370,7 +367,6 @@ class Parser {
                 case 'oldStatus':
                 case 'newStatus':
                 case 'scheduledAt':
-                case 'merchantMetaData':
                     if (method_exists($scheduleResult, 'set'.ucfirst($childNode->localName))) {
                         $scheduleResult->{'set' . ucfirst($childNode->localName)}($childNode->nodeValue);
                     }

@@ -34,11 +34,9 @@ class CustomerData extends DataObject {
 
     /**
      * @param \DateTime|string $birthDate
-     *
-     * @throws \Exception
      */
     public function setBirthDate($birthDate) {
-        if (!empty($birthDate) && is_string($birthDate)) {
+        if (is_string($birthDate) && $birthDate) {
             $birthDate = new \DateTime($birthDate);
         }
         $this->birthDate = $birthDate;

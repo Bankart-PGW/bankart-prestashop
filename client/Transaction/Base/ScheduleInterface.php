@@ -3,19 +3,18 @@
 namespace BankartPaymentGateway\Client\Transaction\Base;
 
 use BankartPaymentGateway\Client\Schedule\ScheduleData;
-use BankartPaymentGateway\Client\Schedule\ScheduleWithTransaction;
 
 interface ScheduleInterface {
 
     /**
-     * @return ScheduleData|ScheduleWithTransaction
+     * @return ScheduleData
      */
     public function getSchedule();
 
     /**
-     * @param ScheduleData|ScheduleWithTransaction $schedule |null
+     * @param ScheduleData $schedule |null
      *
      * @return $this
      */
-    public function setSchedule($schedule = null);
+    public function setSchedule(ScheduleData $schedule = null);
 }

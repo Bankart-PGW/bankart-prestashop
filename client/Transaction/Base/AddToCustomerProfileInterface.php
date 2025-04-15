@@ -2,25 +2,12 @@
 
 namespace BankartPaymentGateway\Client\Transaction\Base;
 
-use BankartPaymentGateway\Client\Data\CustomerProfileData;
-
 /**
  * Interface AddToCustomerProfileInterface
  * @package BankartPaymentGateway\Client\Transaction\Base
  */
 interface AddToCustomerProfileInterface {
 
-
-    /**
-     * @return CustomerProfileData|null
-     */
-    public function getCustomerProfileData();
-
-    /**
-     * @param CustomerProfileData $customerProfileData
-     */
-    public function setCustomerProfileData(CustomerProfileData $customerProfileData = null);
-    
     /**
      * @param bool $addToCustomerProfile
      */
@@ -50,7 +37,7 @@ interface AddToCustomerProfileInterface {
      * @return string
      */
     public function getCustomerProfileIdentification();
-    
+
     /**
      * @return bool
      */
